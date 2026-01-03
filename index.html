@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sonova Onboarding Board – Drag & Unlock</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-title">Sonova Onboarding RH/DP</div>
+      <div class="brand-sub">Benefícios e usabilidade em formato de jogo. Arraste 3 peças e desbloqueie.</div>
+    </div>
+
+    <div class="top-actions">
+      <button class="btn ghost" id="btn-mode" type="button">Alternar modo</button>
+      <button class="btn" id="btn-reveal" type="button">Revelar pista</button>
+      <button class="btn danger" id="btn-reset" type="button">Resetar</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="board-area">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">Tabuleiro de etapas</div>
+            <div class="panel-sub" id="stage-sub">Etapa 1: desbloqueie o próximo item</div>
+          </div>
+          <div class="pill" id="pill-status">Em progresso</div>
+        </div>
+
+        <div class="board" id="board"></div>
+
+        <div class="legend">
+          <div class="leg-item"><span class="dot current"></span><span>Etapa atual</span></div>
+          <div class="leg-item"><span class="dot locked"></span><span>Bloqueado</span></div>
+          <div class="leg-item"><span class="dot open"></span><span>Liberado</span></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">Carta do item (fluxo em 3 passos)</div>
+          <button class="btn small" id="btn-copy-card" type="button">Copiar resumo</button>
+        </div>
+
+        <div class="portal-cardbox">
+          <div class="portal-title" id="portal-title">Selecione um card</div>
+          <div class="portal-sub" id="portal-sub">Quando liberar, aparece a sequência de uso em 3 passos</div>
+
+          <div class="portal-steps" id="portal-steps"></div>
+
+          <div class="portal-tools">
+            <button class="btn primary" id="btn-open" type="button" disabled>Abrir</button>
+            <button class="btn" id="btn-copy" type="button" disabled>Copiar link</button>
+            <button class="btn ghost" id="btn-qr" type="button" disabled>Mostrar QR</button>
+          </div>
+
+          <div class="qrbox" id="qrbox">
+            <img id="qrimg" class="qrimg" alt="QR Code" />
+            <div class="monolink" id="qrlink"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="side-area">
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">Bandeja de peças</div>
+          <div class="pill" id="pill-level">Nível 1</div>
+        </div>
+
+        <div class="kpis">
+          <div class="kpi">
+            <div class="kpi-label">XP</div>
+            <div class="kpi-value" id="kpi-xp">0</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Etapas</div>
+            <div class="kpi-value" id="kpi-done">0/0</div>
+          </div>
+        </div>
+
+        <div class="tray" id="tray"></div>
+
+        <div class="lockbox">
+          <div class="lockhead">
+            <div class="locktitle">Cadeado (arraste 3 peças)</div>
+            <button class="btn small danger" id="btn-clear" type="button">Limpar slots</button>
+          </div>
+
+          <div class="slots" id="slots">
+            <div class="slot" data-slot="0"><div class="slotlabel">1</div></div>
+            <div class="slot" data-slot="1"><div class="slotlabel">2</div></div>
+            <div class="slot" data-slot="2"><div class="slotlabel">3</div></div>
+          </div>
+
+          <div class="lockhint" id="lockhint">
+            Dica: “Revelar pista” mostra a sequência (máximo 3 números) por poucos segundos na etapa atual.
+            Não é prova. É só um jeito leve de guiar o caminho.
+          </div>
+
+          <div class="resultline" id="resultline"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">Certificado</div>
+          <button class="btn" id="btn-cert" type="button" disabled>Gerar</button>
+        </div>
+
+        <label class="field">
+          <span>Nome do colaborador</span>
+          <input id="in-name" type="text" placeholder="Ex.: Ana Souza" />
+        </label>
+
+        <div class="certwrap" id="certwrap" aria-hidden="true">
+          <div class="certframe" id="certframe">
+            <div class="certtop">
+              <div class="certbrand">SONOVA</div>
+              <div class="certtitle">Onboarding RH/DP</div>
+              <div class="certsub">Benefícios e usabilidade (Drag & Unlock)</div>
+            </div>
+
+            <div class="certbody">
+              <div class="certname" id="certname">Nome do colaborador</div>
+
+              <div class="certtext" id="certtext">
+                Concluiu a trilha mínima de onboarding operacional em RH/DP, com foco em benefícios e usabilidade.
+                As etapas foram desbloqueadas por fluxo intuitivo e registradas automaticamente.
+              </div>
+
+              <div class="certgrid">
+                <div class="certbox">
+                  <div class="certlbl">Etapas concluídas</div>
+                  <div class="certval" id="certstages">0/0</div>
+                </div>
+                <div class="certbox">
+                  <div class="certlbl">XP</div>
+                  <div class="certval" id="certxp">0</div>
+                </div>
+                <div class="certbox">
+                  <div class="certlbl">Data</div>
+                  <div class="certval" id="certdate">--</div>
+                </div>
+              </div>
+
+              <div class="certlist">
+                <div class="certlbl2">Benefícios e acessos concluídos</div>
+                <div class="certitems" id="certitems"></div>
+              </div>
+
+              <div class="certfoot">
+                <div class="sig">
+                  <div class="sigline"></div>
+                  <div class="siglbl">RH/DP – Operações</div>
+                </div>
+
+                <div class="seal">
+                  <div class="sealinner">OK</div>
+                  <div class="seallbl">Onboarding</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="certactions">
+            <button class="btn primary" id="btn-print" type="button">Imprimir / Salvar PDF</button>
+            <button class="btn ghost" id="btn-hide" type="button">Fechar</button>
+          </div>
+        </div>
+
+        <div class="mini">
+          Quando todas as etapas forem liberadas, o botão “Gerar” fica disponível.
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <div class="toast" id="toast" aria-hidden="true"></div>
+
+  <script src="game.js"></script>
+</body>
+</html>
