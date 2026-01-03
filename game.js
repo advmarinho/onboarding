@@ -16,7 +16,7 @@
   }
 
   const SONOVA_CUIDA = {
-    phone: "0800 718 7315",
+    phone: "0800 718 7815",
     email: "sonova@cpsbrasil.com",
     site: "https://viverbem.careglobalpartners.com.br/",
     code: "sonova-cuida"
