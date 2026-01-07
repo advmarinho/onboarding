@@ -192,6 +192,12 @@
   const btnClear = document.getElementById("btn-clear");
   const btnMode = document.getElementById("btn-mode");
 
+  const inSlot0 = document.getElementById("in-slot-0");
+  const inSlot1 = document.getElementById("in-slot-1");
+  const inSlot2 = document.getElementById("in-slot-2");
+  const btnApply = document.getElementById("btn-apply");
+
+
   const elPortalTitle = document.getElementById("portal-title");
   const elPortalSub = document.getElementById("portal-sub");
   const elPortalSteps = document.getElementById("portal-steps");
@@ -238,6 +244,15 @@
     clearSlotsToTray();
     setResult("", "");
   });
+
+
+  if (btnApply) {
+    btnApply.addEventListener("click", () => applyTypedSequence());
+  }
+
+  if (inSlot0) inSlot0.addEventListener("keydown", (e) => { if (e.key === "Enter") applyTypedSequence(); });
+  if (inSlot1) inSlot1.addEventListener("keydown", (e) => { if (e.key === "Enter") applyTypedSequence(); });
+  if (inSlot2) inSlot2.addEventListener("keydown", (e) => { if (e.key === "Enter") applyTypedSequence(); });
 
   btnMode.addEventListener("click", () => {
     const cur = localStorage.getItem(MODE_KEY) || "normal";
@@ -519,7 +534,13 @@
       });
 
       slot.appendChild(sp);
-    });
+    })
+
+    // Sincroniza com a entrada por digitação (mobile)
+    if (inSlot0) inSlot0.value = state.slots[0] == null ? "" : String(state.slots[0]);
+    if (inSlot1) inSlot1.value = state.slots[1] == null ? "" : String(state.slots[1]);
+    if (inSlot2) inSlot2.value = state.slots[2] == null ? "" : String(state.slots[2]);
+;
   }
 
   function refreshHUD() {
@@ -677,6 +698,46 @@
     saveState(state);
     renderTray();
     renderSlots();
+  }
+
+
+  function applyTypedSequence() {
+    if (!inSlot0 || !inSlot1 || !inSlot2) {
+      toast("Entrada por digitação não está disponível nesta versão.");
+      return;
+    }
+
+    const a = String(inSlot0.value || "").trim();
+    const b = String(inSlot1.value || "").trim();
+    const c = String(inSlot2.value || "").trim();
+
+    if (!a || !b || !c) {
+      toast("Preencha os 3 números.");
+      return;
+    }
+
+    const nums = [Number(a), Number(b), Number(c)];
+
+    for (const n of nums) {
+      if (!Number.isFinite(n) || n < 1 || n > 7) {
+        toast("Use apenas números de 1 a 7.");
+        return;
+      }
+    }
+
+    const uniq = new Set(nums);
+    if (uniq.size !== nums.length) {
+      toast("Não repita números (3 peças diferentes).");
+      return;
+    }
+
+    clearSlotsToTray();
+    setResult("", "");
+
+    // Preenche os slots com a sequência digitada
+    placePieceIntoSlot(nums[0], 0);
+    placePieceIntoSlot(nums[1], 1);
+    placePieceIntoSlot(nums[2], 2);
   }
 
   function validateSequence() {

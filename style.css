@@ -775,3 +775,60 @@ body.audit{
 .pista.revealed{
   box-shadow: 0 8px 18px rgba(17, 24, 39, 0.10);
 }
+
+
+/* ============================================================
+   Entrada por digitação (mobile-friendly)
+   ============================================================ */
+
+.lockentry{
+  margin-top: 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px;
+  background: linear-gradient(180deg, #ffffff, #fbfcff);
+}
+
+.lockentry-title{
+  font-weight: 900;
+  font-size: 12.5px;
+  margin-bottom: 8px;
+}
+
+.lockentry-row{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.lockinput{
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px;
+  font-size: 14px;
+  outline: none;
+  text-align: center;
+  font-family: var(--mono);
+}
+
+.lockinput:focus{
+  border-color: rgba(0,74,153,0.45);
+}
+
+.lockentry-hint{
+  margin-top: 8px;
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+@media (max-width: 420px){
+  .lockentry-row{
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  #btn-apply{
+    grid-column: 1 / -1;
+    justify-self: stretch;
+  }
+}
