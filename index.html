@@ -3,19 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Sonova Onboarding Board – Drag & Unlock</title>
+  <title>Sonova Onboarding – Benefícios e Usabilidade</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header class="topbar">
     <div class="brand">
       <div class="brand-title">Sonova Onboarding RH/DP</div>
-      <div class="brand-sub">Benefícios e usabilidade em formato de jogo. Arraste 3 peças e desbloqueie.</div>
+      <div class="brand-sub">Benefícios e usabilidade. Clique no card para ver o passo a passo.</div>
     </div>
 
     <div class="top-actions">
       <button class="btn ghost" id="btn-mode" type="button">Alternar modo</button>
-      <button class="btn" id="btn-reveal" type="button">Revelar pista</button>
       <button class="btn danger" id="btn-reset" type="button">Resetar</button>
     </div>
   </header>
@@ -25,37 +24,38 @@
       <div class="panel">
         <div class="panel-head">
           <div>
-            <div class="panel-title">Tabuleiro de etapas</div>
-            <div class="panel-sub" id="stage-sub">Etapa 1: desbloqueie o próximo item</div>
+            <div class="panel-title">Benefícios e acessos</div>
+            <div class="panel-sub" id="stage-sub">Clique em um card para ver o passo a passo</div>
           </div>
-          <div class="pill" id="pill-status">Em progresso</div>
+          <div class="pill" id="pill-status">0 de 10 concluídos</div>
         </div>
 
         <div class="board" id="board"></div>
 
         <div class="legend">
-          <div class="leg-item"><span class="dot current"></span><span>Etapa atual</span></div>
-          <div class="leg-item"><span class="dot locked"></span><span>Bloqueado</span></div>
-          <div class="leg-item"><span class="dot open"></span><span>Liberado</span></div>
+          <div class="leg-item"><span class="dot open"></span><span>Concluído</span></div>
+          <div class="leg-item"><span class="dot current"></span><span>Selecionado</span></div>
+          <div class="leg-item"><span class="dot locked"></span><span>Pendente</span></div>
         </div>
       </div>
 
       <div class="panel">
         <div class="panel-head">
-          <div class="panel-title">Carta do item (fluxo em 3 passos)</div>
+          <div class="panel-title">Carta do item (passo a passo)</div>
           <button class="btn small" id="btn-copy-card" type="button">Copiar resumo</button>
         </div>
 
         <div class="portal-cardbox">
           <div class="portal-title" id="portal-title">Selecione um card</div>
-          <div class="portal-sub" id="portal-sub">Quando liberar, aparece a sequência de uso em 3 passos</div>
+          <div class="portal-sub" id="portal-sub">O passo a passo do item aparece aqui</div>
 
           <div class="portal-steps" id="portal-steps"></div>
 
           <div class="portal-tools">
-            <button class="btn primary" id="btn-open" type="button" disabled>Abrir</button>
+            <button class="btn primary" id="btn-open" type="button" disabled>Abrir portal</button>
             <button class="btn" id="btn-copy" type="button" disabled>Copiar link</button>
             <button class="btn ghost" id="btn-qr" type="button" disabled>Mostrar QR</button>
+            <button class="btn" id="btn-done" type="button" disabled>Marcar como concluído</button>
           </div>
 
           <div class="qrbox" id="qrbox">
@@ -69,53 +69,24 @@
     <aside class="side-area">
       <div class="panel">
         <div class="panel-head">
-          <div class="panel-title">Bandeja de peças</div>
+          <div class="panel-title">Progresso</div>
           <div class="pill" id="pill-level">Nível 1</div>
         </div>
 
         <div class="kpis">
           <div class="kpi">
+            <div class="kpi-label">Concluídos</div>
+            <div class="kpi-value" id="kpi-done">0/0</div>
+          </div>
+          <div class="kpi">
             <div class="kpi-label">XP</div>
             <div class="kpi-value" id="kpi-xp">0</div>
           </div>
-          <div class="kpi">
-            <div class="kpi-label">Etapas</div>
-            <div class="kpi-value" id="kpi-done">0/0</div>
-          </div>
         </div>
 
-        <div class="tray" id="tray"></div>
-
-        <div class="lockbox">
-          <div class="lockhead">
-            <div class="locktitle">Cadeado (arraste 3 peças)</div>
-            <button class="btn small danger" id="btn-clear" type="button">Limpar slots</button>
-          </div>
-
-          <div class="slots" id="slots">
-            <div class="slot" data-slot="0"><div class="slotlabel">1</div></div>
-            <div class="slot" data-slot="1"><div class="slotlabel">2</div></div>
-            <div class="slot" data-slot="2"><div class="slotlabel">3</div></div>
-          </div>
-
-
-          <div class="lockentry" id="lockentry">
-            <div class="lockentry-title">Digitar sequência (celular)</div>
-            <div class="lockentry-row">
-              <input class="lockinput" id="in-slot-0" type="tel" inputmode="numeric" pattern="[0-9]*" placeholder="Nº 1" />
-              <input class="lockinput" id="in-slot-1" type="tel" inputmode="numeric" pattern="[0-9]*" placeholder="Nº 2" />
-              <input class="lockinput" id="in-slot-2" type="tel" inputmode="numeric" pattern="[0-9]*" placeholder="Nº 3" />
-              <button class="btn small primary" id="btn-apply" type="button">Aplicar</button>
-            </div>
-            <div class="lockentry-hint">Dica: digite 3 números de 1 a 7 e toque em Aplicar (o arrastar continua funcionando no desktop).</div>
-          </div>
-
-          <div class="lockhint" id="lockhint">
-            Dica: “Revelar pista” mostra a sequência (máximo 3 números) por poucos segundos na etapa atual.
-            Não é prova. É só um jeito leve de guiar o caminho.
-          </div>
-
-          <div class="resultline" id="resultline"></div>
+        <div class="mini">
+          Cada item concluído vale XP. Marque ao terminar o passo a passo do card.
+          Quando todos estiverem concluídos, o botão "Gerar" do certificado fica disponível.
         </div>
       </div>
 
@@ -135,15 +106,15 @@
             <div class="certtop">
               <div class="certbrand">SONOVA</div>
               <div class="certtitle">Onboarding RH/DP</div>
-              <div class="certsub">Benefícios e usabilidade (Drag & Unlock)</div>
+              <div class="certsub">Benefícios e usabilidade</div>
             </div>
 
             <div class="certbody">
               <div class="certname" id="certname">Nome do colaborador</div>
 
               <div class="certtext" id="certtext">
-                Concluiu a trilha mínima de onboarding operacional em RH/DP, com foco em benefícios e usabilidade.
-                As etapas foram desbloqueadas por fluxo intuitivo e registradas automaticamente.
+                Concluiu a trilha de onboarding operacional em RH/DP, com foco em benefícios e usabilidade.
+                As etapas foram visualizadas e marcadas como concluídas.
               </div>
 
               <div class="certgrid">
@@ -187,7 +158,7 @@
         </div>
 
         <div class="mini">
-          Quando todas as etapas forem liberadas, o botão “Gerar” fica disponível.
+          Quando todas as etapas forem concluídas, o botão "Gerar" fica disponível.
         </div>
       </div>
     </aside>

@@ -27,6 +27,9 @@ body{
   color: var(--text);
 }
 
+/* ============================================================
+   Topbar
+   ============================================================ */
 .topbar{
   position: sticky;
   top: 0;
@@ -55,6 +58,9 @@ body{
 
 .top-actions{ display: flex; gap: 10px; }
 
+/* ============================================================
+   Botões
+   ============================================================ */
 .btn{
   border: 1px solid var(--border);
   background: #ffffff;
@@ -90,6 +96,9 @@ body{
   transform: none;
 }
 
+/* ============================================================
+   Layout
+   ============================================================ */
 .layout{
   max-width: 1280px;
   margin: 16px auto;
@@ -99,7 +108,7 @@ body{
   gap: 14px;
 }
 
-.board-area, .side-area{ display: grid; gap: 14px; min-width: 0; }
+.board-area, .side-area{ display: grid; gap: 14px; min-width: 0; align-content: start; }
 
 .panel{
   background: var(--card);
@@ -161,57 +170,49 @@ body{
 .dot.open{ background: rgba(15,118,110,0.18); border-color: rgba(15,118,110,0.25); }
 
 /* ============================================================
-   Board cards
+   Board cards (simples, sem flip/cadeado)
    ============================================================ */
-
 .board{
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
 }
 
-.flip{
+.card{
   position: relative;
-  height: 210px;
-  perspective: 1000px;
-}
-
-.flip-inner{
-  position: absolute;
-  inset: 0;
-  border-radius: 14px;
-  transform-style: preserve-3d;
-  transition: transform 360ms ease;
-}
-
-.flip.open .flip-inner{ transform: rotateY(180deg); }
-
-.face{
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
   border-radius: 14px;
   border: 1px solid var(--border);
-  overflow: hidden;
-}
-
-.face.back{
   background: linear-gradient(180deg, #ffffff, #fbfcff);
-  display: flex;
-  flex-direction: column;
+  padding: 14px;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 8px;
+  cursor: pointer;
+  min-height: 190px;
+  transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease;
 }
 
-.face.front{
-  transform: rotateY(180deg);
-  background: linear-gradient(180deg, #ffffff, #fbfcff);
+.card:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(17,24,39,0.10);
+  border-color: rgba(0,74,153,0.25);
 }
 
-.back-top{
-  padding: 12px;
-  border-bottom: 1px solid var(--border);
+.card.selected{
+  outline: 3px solid rgba(0,74,153,0.25);
+  outline-offset: 2px;
+  border-color: rgba(0,74,153,0.35);
+}
+
+.card.done{
+  background: linear-gradient(180deg, #f6fffb, #ffffff);
+  border-color: rgba(15,118,110,0.30);
+}
+
+.card-top{
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
 }
 
@@ -221,121 +222,58 @@ body{
   color: var(--sonova);
 }
 
-.locked-title{
+.card-status{
+  font-size: 11px;
   font-weight: 900;
-  font-size: 14px;
-  margin-top: 6px;
-}
-
-.locked-sub{
-  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 8px;
+  border-radius: 999px;
   color: var(--muted);
-  margin-top: 3px;
-}
-
-/* Ajuste principal: garante espaço para a pista (sempre visível) */
-.back-body{
-  padding: 12px;
-  display: grid;
-  grid-template-rows: 1fr auto;
-  gap: 10px;
-  flex: 1;
-  min-height: 0;
-}
-
-.pista{
-  font-family: var(--mono);
-  font-size: 12px;
-  color: #111827;
-  background: #f8fafc;
+  background: #f3f4f6;
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 9px 10px;
-  opacity: 0.92;
 }
 
-.pista.hidden{
-  filter: blur(7px);
-  user-select: none;
-  opacity: 0.65;
+.card.done .card-status{
+  color: var(--ok);
+  background: rgba(15,118,110,0.10);
+  border-color: rgba(15,118,110,0.25);
 }
 
-.current-glow{
-  outline: 3px solid rgba(0,74,153,0.18);
-  outline-offset: 2px;
-}
-
-.front-body{
-  padding: 12px;
-  height: 100%;
-  display: grid;
-  grid-template-rows: auto auto 1fr auto;
-  gap: 8px;
-}
-
-.front-title{
+.card-title{
   font-weight: 900;
   font-size: 14px;
+  line-height: 1.25;
 }
 
-.front-sub{
+.card-sub{
   font-size: 12.5px;
   color: var(--muted);
+  line-height: 1.35;
 }
-
-.front-tools{
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-/* ============================================================
-   Ícone no centro do card (via favicon)
-   ============================================================ */
 
 .card-iconwrap{
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 74px;
-  flex: 1;
 }
 
 .card-logo{
-  width: 74px;
-  height: 74px;
+  width: 64px;
+  height: 64px;
   border-radius: 999px;
   border: 1px solid rgba(0,74,153,0.20);
   background: #ffffff;
   display: block;
   object-fit: contain;
-  padding: 12px;
+  padding: 10px;
   user-select: none;
 }
 
-.card-logo.locked{
-  opacity: 0.70;
-  filter: grayscale(100%);
-}
-
-/* Ícone um pouco menor no verso para não cortar a pista */
-.face.back .card-logo{
-  width: 62px;
-  height: 62px;
-  padding: 10px;
-}
-.face.back .card-mono{
-  width: 62px;
-  height: 62px;
-  font-size: 15px;
-}
-.face.back .card-iconwrap{
-  min-height: 62px;
-}
-
 .card-mono{
-  width: 74px;
-  height: 74px;
+  width: 64px;
+  height: 64px;
   border-radius: 999px;
   border: 1px solid rgba(0,74,153,0.22);
   background: radial-gradient(circle at 30% 30%, rgba(10,99,198,0.20), rgba(0,74,153,0.06));
@@ -344,17 +282,23 @@ body{
   justify-content: center;
   color: var(--sonova);
   font-weight: 900;
-  font-size: 16px;
+  font-size: 15px;
   letter-spacing: 0.8px;
   text-transform: uppercase;
   user-select: none;
 }
 
-.card-mono.locked{
-  opacity: 0.75;
+.card-foot{
+  font-size: 12px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-/* Portal cardbox */
+/* ============================================================
+   Portal cardbox (carta do item)
+   ============================================================ */
 .portal-cardbox{
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -385,7 +329,22 @@ body{
   padding: 9px 10px;
   background: #ffffff;
   font-size: 13px;
-  line-height: 1.3;
+  line-height: 1.35;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.step-num{
+  flex-shrink: 0;
+  width: 22px; height: 22px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--sonova), var(--sonova2));
+  color: #fff;
+  font-weight: 900;
+  font-size: 12px;
+  display: grid;
+  place-items: center;
 }
 
 .portal-tools{
@@ -425,7 +384,9 @@ body{
   overflow-wrap: anywhere;
 }
 
-/* Side */
+/* ============================================================
+   Side (progresso / certificado)
+   ============================================================ */
 .kpis{
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -440,113 +401,7 @@ body{
 }
 
 .kpi-label{ font-size: 12px; color: var(--muted); }
-.kpi-value{ font-size: 20px; font-weight: 900; margin-top: 4px; }
-
-.tray{
-  margin-top: 12px;
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.piece{
-  border-radius: 14px;
-  border: 1px solid rgba(0,74,153,0.18);
-  background: linear-gradient(180deg, rgba(0,74,153,0.10), rgba(10,99,198,0.06));
-  height: 56px;
-  display: grid;
-  place-items: center;
-  font-weight: 900;
-  font-size: 18px;
-  color: var(--sonova);
-  cursor: grab;
-  user-select: none;
-}
-
-.piece:active{ cursor: grabbing; }
-
-.piece.used{
-  opacity: 0.35;
-  cursor: not-allowed;
-}
-
-.lockbox{
-  margin-top: 12px;
-  border-top: 1px solid var(--border);
-  padding-top: 12px;
-}
-
-.lockhead{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.locktitle{ font-weight: 900; font-size: 13.5px; }
-
-.slots{
-  margin-top: 10px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-
-.slot{
-  position: relative;
-  height: 64px;
-  border-radius: 14px;
-  border: 2px dashed rgba(0,74,153,0.22);
-  background: #ffffff;
-  display: grid;
-  place-items: center;
-}
-
-.slot.over{
-  background: rgba(0,74,153,0.06);
-  border-color: rgba(0,74,153,0.35);
-}
-
-.slotlabel{
-  position: absolute;
-  left: 10px;
-  top: 8px;
-  font-size: 12px;
-  color: var(--muted);
-  font-weight: 700;
-}
-
-.slotpiece{
-  width: 72%;
-  height: 44px;
-  border-radius: 12px;
-  border: 1px solid rgba(0,74,153,0.18);
-  background: linear-gradient(180deg, rgba(0,74,153,0.10), rgba(10,99,198,0.06));
-  display: grid;
-  place-items: center;
-  font-weight: 900;
-  font-size: 16px;
-  color: var(--sonova);
-  cursor: grab;
-}
-
-.lockhint{
-  margin-top: 10px;
-  font-size: 12.5px;
-  color: var(--muted);
-  line-height: 1.35;
-}
-
-.resultline{
-  margin-top: 10px;
-  font-size: 12.5px;
-  font-weight: 700;
-  color: var(--muted);
-  min-height: 18px;
-}
-
-.resultline.ok{ color: var(--ok); }
-.resultline.bad{ color: var(--bad); }
+.kpi-value{ font-size: 20px; font-weight: 900; margin-top: 4px; color: var(--sonova); }
 
 .field{ display: grid; gap: 6px; }
 .field span{ font-size: 12.5px; color: var(--muted); }
@@ -557,13 +412,12 @@ body{
   font-size: 13px;
   outline: none;
 }
+.field input:focus{ border-color: rgba(0,74,153,0.45); }
 
-/* Certificate */
-.certwrap{
-  margin-top: 12px;
-  display: none;
-}
-
+/* ============================================================
+   Certificate
+   ============================================================ */
+.certwrap{ margin-top: 12px; display: none; }
 .certwrap.show{ display: block; }
 
 .certframe{
@@ -683,10 +537,7 @@ body{
 .sigline{ height: 1px; background: rgba(17,24,39,0.25); }
 .siglbl{ margin-top: 6px; font-size: 12px; color: #6b7280; font-weight: 700; }
 
-.seal{
-  width: 92px;
-  text-align: center;
-}
+.seal{ width: 92px; text-align: center; }
 
 .sealinner{
   width: 72px;
@@ -722,7 +573,9 @@ body{
   line-height: 1.35;
 }
 
-/* Toast */
+/* ============================================================
+   Toast
+   ============================================================ */
 .toast{
   position: fixed;
   left: 14px;
@@ -750,13 +603,22 @@ body.audit{
   background: linear-gradient(180deg, #fff7ed, #fefce8);
 }
 
+/* ============================================================
+   Responsivo
+   ============================================================ */
 @media (max-width: 1100px){
   .layout{ grid-template-columns: 1fr; }
-  .board{ grid-template-columns: 1fr; }
+  .board{ grid-template-columns: repeat(2, 1fr); }
   .certgrid{ grid-template-columns: 1fr; }
 }
 
-/* Print certificate only */
+@media (max-width: 640px){
+  .board{ grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   Print certificate only
+   ============================================================ */
 @media print{
   body *{ visibility: hidden; }
   #certframe, #certframe *{ visibility: visible; }
@@ -768,67 +630,5 @@ body.audit{
     height: auto;
     margin: 0;
     box-shadow: none;
-  }
-}
-
-
-.pista.revealed{
-  box-shadow: 0 8px 18px rgba(17, 24, 39, 0.10);
-}
-
-
-/* ============================================================
-   Entrada por digitação (mobile-friendly)
-   ============================================================ */
-
-.lockentry{
-  margin-top: 12px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 10px;
-  background: linear-gradient(180deg, #ffffff, #fbfcff);
-}
-
-.lockentry-title{
-  font-weight: 900;
-  font-size: 12.5px;
-  margin-bottom: 8px;
-}
-
-.lockentry-row{
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr auto;
-  gap: 10px;
-  align-items: center;
-}
-
-.lockinput{
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 10px;
-  font-size: 14px;
-  outline: none;
-  text-align: center;
-  font-family: var(--mono);
-}
-
-.lockinput:focus{
-  border-color: rgba(0,74,153,0.45);
-}
-
-.lockentry-hint{
-  margin-top: 8px;
-  font-size: 12.5px;
-  color: var(--muted);
-  line-height: 1.35;
-}
-
-@media (max-width: 420px){
-  .lockentry-row{
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-  #btn-apply{
-    grid-column: 1 / -1;
-    justify-self: stretch;
   }
 }
