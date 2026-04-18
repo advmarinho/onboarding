@@ -84,7 +84,7 @@
       stage: 5,
       title: "Atualização de VT (Formulário digital)",
       sub: "Solicitar/atualizar Vale-Transporte via formulário",
-      url: "https://drive.google.com/file/d/1uS55t_X731T8PTX5E7z8dcn3Cgwr1Uc2/view?usp=drive_link",
+      url: "https://drive.google.com/file/d/1uS55t_X731T8PTX5E7z8dcn3Cgwr1Uc2/view",
       icon: googleFavicon("drive.google.com", 128),
       steps: [
         "Abrir o formulário e preencher os dados solicitados.",
@@ -176,6 +176,12 @@
   const elDone = document.getElementById("kpi-done");
   const elLevel = document.getElementById("pill-level");
 
+  // NOVO — barra de progresso
+  const elProgressLabel = document.getElementById("progress-label");
+  const elProgressHint = document.getElementById("progress-hint");
+  const elProgressFill = document.getElementById("progress-fill");
+  const elProgressbar = document.getElementById("progressbar");
+
   const btnReset = document.getElementById("btn-reset");
   const btnMode = document.getElementById("btn-mode");
 
@@ -234,9 +240,26 @@
     toast(next === "audit" ? "Modo auditoria" : "Modo normal");
   });
 
+  // ============================================================
+  // ALTERADO — Abrir portal agora também marca como concluído
+  // (1 clique: abre o link + marca como concluído + soma XP)
+  // ============================================================
   btnOpen.addEventListener("click", () => {
     const p = getSelectedPortal();
     if (!p || !p.url) return;
+
+    // Marca como concluído automaticamente (se ainda não estava)
+    if (!state.done[p.key]) {
+      state.done[p.key] = true;
+      state.xp += Number(p.xp || 10);
+      saveState(state);
+      toast(`Concluído: ${p.title}`);
+      renderBoard();
+      refreshHUD();
+      renderPortalCardFromSelection();
+    }
+
+    // Abre o portal em nova aba
     window.open(p.url, "_blank", "noopener");
   });
 
@@ -356,6 +379,13 @@
     btnDone.disabled = false;
     btnDone.textContent = state.done[p.key] ? "Desmarcar" : "Marcar como concluído";
 
+    // Texto do botão "Abrir portal" indica que vai concluir
+    if (hasUrl) {
+      btnOpen.textContent = state.done[p.key] ? "Abrir portal ↗" : "Abrir portal (conclui)";
+    } else {
+      btnOpen.textContent = "Sem link — siga o passo a passo";
+    }
+
     qrbox.classList.remove("show");
   }
 
@@ -376,6 +406,33 @@
           : `Faltam ${total - doneCount} para concluir a trilha`;
 
     btnCert.disabled = doneCount < total;
+
+    // NOVO — atualiza a barra de progresso no topo
+    refreshProgress(doneCount, total);
+  }
+
+  /* ============================================================
+     NOVO — Atualiza a barra de progresso sticky
+     ============================================================ */
+  function refreshProgress(done, total) {
+    if (!elProgressFill) return;
+    const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+
+    elProgressFill.style.width = pct + "%";
+
+    if (done === 0) {
+      elProgressLabel.textContent = `0 de ${total} concluídos`;
+      elProgressHint.textContent = "Comece pelo primeiro card";
+    } else if (done < total) {
+      elProgressLabel.textContent = `${done} de ${total} concluídos (${pct}%)`;
+      const nextPending = PORTAIS.find(p => !state.done[p.key]);
+      elProgressHint.textContent = nextPending ? `Próximo: ${nextPending.title}` : "";
+    } else {
+      elProgressLabel.textContent = `Tudo concluído! ${done}/${total} (100%)`;
+      elProgressHint.textContent = "Gere o certificado →";
+    }
+
+    elProgressbar.classList.toggle("complete", done === total);
   }
 
   /* ============================================================

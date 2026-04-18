@@ -59,6 +59,68 @@ body{
 .top-actions{ display: flex; gap: 10px; }
 
 /* ============================================================
+   NOVO — Barra de progresso (sticky, sempre visível)
+   ============================================================ */
+.progressbar{
+  position: sticky;
+  top: 66px; /* abaixo da topbar */
+  z-index: 19;
+  padding: 10px 18px 12px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+
+.progressbar-head{
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 8px;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.progressbar-label{
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--sonova);
+  letter-spacing: 0.2px;
+}
+
+.progressbar-hint{
+  font-size: 12px;
+  color: var(--muted);
+  text-align: right;
+}
+
+.progressbar-track{
+  height: 10px;
+  border-radius: 999px;
+  background: #e6ecf5;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.progressbar-fill{
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--sonova), var(--sonova2));
+  border-radius: 999px;
+  transition: width 420ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 0 8px rgba(0,74,153,0.35);
+}
+
+.progressbar.complete .progressbar-fill{
+  background: linear-gradient(90deg, var(--ok), #16a085);
+  box-shadow: 0 0 10px rgba(15,118,110,0.4);
+}
+.progressbar.complete .progressbar-label{ color: var(--ok); }
+
+/* ============================================================
    Botões
    ============================================================ */
 .btn{
@@ -170,7 +232,7 @@ body{
 .dot.open{ background: rgba(15,118,110,0.18); border-color: rgba(15,118,110,0.25); }
 
 /* ============================================================
-   Board cards (simples, sem flip/cadeado)
+   Board cards
    ============================================================ */
 .board{
   display: grid;
@@ -614,6 +676,8 @@ body.audit{
 
 @media (max-width: 640px){
   .board{ grid-template-columns: 1fr; }
+  .progressbar{ top: 78px; padding: 8px 14px 10px; }
+  .progressbar-hint{ display: none; }
 }
 
 /* ============================================================
